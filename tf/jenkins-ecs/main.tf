@@ -1,3 +1,11 @@
+terraform {
+  backend "s3" {
+    bucket = "shan-ali-terraform-state"
+    key    = "ecs/jenkins-ecs/terraform.tfstate"
+    region = "us-east-1"
+  }
+}
+
 provider "aws" {
   region = "us-east-1"
 }
