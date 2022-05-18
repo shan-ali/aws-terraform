@@ -11,8 +11,7 @@ resource "aws_ecs_cluster" "jenkins_ecs_cluster" {
 }
 
 resource "aws_ecs_cluster_capacity_providers" "jenkins_ecs_cluster_capacity_provider" {
-  cluster_name = aws_ecs_cluster.jenkins_ecs_cluster.name
-
+  cluster_name       = aws_ecs_cluster.jenkins_ecs_cluster.name
   capacity_providers = ["FARGATE"]
 }
 
@@ -21,10 +20,10 @@ resource "aws_ecs_task_definition" "jenkins_ecs_td" {
   requires_compatibilities = ["FARGATE"]
   network_mode             = "awsvpc"
   cpu                      = 1024
-  memory                   = 3072
-  # todo: make tf resource that creates iam role
+  memory                   = 2048
   task_role_arn            = "arn:aws:iam::345431723159:role/ecsTaskExecutionRole"
   execution_role_arn       = "arn:aws:iam::345431723159:role/ecsTaskExecutionRole"
+
   container_definitions = <<DEFINITION
   [
     {
@@ -50,9 +49,7 @@ resource "aws_ecs_task_definition" "jenkins_ecs_td" {
         }
     }
   ]
-  DEFINITION
-
-  
+  DEFINITION 
 
   runtime_platform {
     operating_system_family = "LINUX"
@@ -64,16 +61,16 @@ resource "aws_ecs_service" "jenkins_ecs_service" {
   name            = "jenkins_ecs_service"
   cluster         = aws_ecs_cluster.jenkins_ecs_cluster.id
   task_definition = aws_ecs_task_definition.jenkins_ecs_td.arn
-  launch_type = "FARGATE"
+  launch_type     = "FARGATE"
   desired_count   = 1
   #iam_role        = aws_iam_role.foo.arn
   #depends_on      = [aws_iam_role_policy.foo]
-  platform_version = "LATEST"
+  platform_version        = "LATEST"
   enable_ecs_managed_tags = true
 
   network_configuration {
-    subnets = [ "subnet-088406bf154155db2" ]
-    security_groups = [ aws_security_group.jenkins_ecs_sg.id ]
+    subnets          = ["subnet-088406bf154155db2"]
+    security_groups  = [aws_security_group.jenkins_ecs_sg.id]
     assign_public_ip = true
   }
 }
@@ -87,9 +84,9 @@ resource "aws_security_group" "jenkins_ecs_sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
   egress {
-    from_port        = 443
-    to_port          = 443
-    protocol         = "tcp"
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
 }
