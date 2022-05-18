@@ -9,7 +9,7 @@ resource "aws_cloudwatch_log_group" "jenkins_ecs_cw_lg" {
 resource "aws_ecs_cluster" "jenkins_ecs_cluster" {
   name = "jenkins_ecs_cluster"
 }
-
+#this is  a test
 resource "aws_ecs_cluster_capacity_providers" "jenkins_ecs_cluster_capacity_provider" {
   cluster_name       = aws_ecs_cluster.jenkins_ecs_cluster.name
   capacity_providers = ["FARGATE"]
