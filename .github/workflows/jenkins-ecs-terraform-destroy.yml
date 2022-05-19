@@ -1,4 +1,4 @@
-name: jenkins-ecs-deploy
+name: jenkins-ecs-terraform-destroy
 
 on:
   # Allows you to run this workflow manually from the Actions tab
