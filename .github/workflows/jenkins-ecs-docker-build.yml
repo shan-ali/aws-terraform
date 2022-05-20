@@ -32,6 +32,7 @@ jobs:
 
     outputs:
       build_name: ${{ steps.generate_img_build_name.outputs.build_name }}
+      output2: ${{ steps.output_test.outputs.my_value }}
 
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
@@ -45,7 +46,17 @@ jobs:
           DATE=`(date +"%Y.%m.%d")` >> $GITHUB_ENV
           DOCKER_IMAGE_BUILD_NAME=${IMAGE_NAME}:${DATE}.${GITHUB_SHA_SHORT}
           echo DOCKER_IMAGE_BUILD_NAME=${DOCKER_IMAGE_BUILD_NAME} >> $GITHUB_ENV
-          echo "::set-output name=build_name::${DOCKER_IMAGE_BUILD_NAME}"
+          echo "::set-output name=build_name::$DOCKER_IMAGE_BUILD_NAME"
+        
+      - name: set test output
+        id: output_test
+        run: |
+          echo "::set-output name=my_value::hello"
+
+      - name: output outputs
+        run: |
+          echo "${{ steps.generate_img_build_name.outputs.build_name }}"
+          echo "${{ steps.output_test.outputs.my_value }}"
 
       - name: Test Image Build Name
         run: echo ${DOCKER_IMAGE_BUILD_NAME}
@@ -98,7 +109,9 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Test output 
-        run: echo ${{ needs.docker-build.outputs.build_name }}
+        run: | 
+          echo ${{ needs.docker-build.outputs.build_name }}
+          echo ${{ needs.docker-build.outputs.output2 }}
 
 
   #     # Install the preferred version of Terraform CLI
