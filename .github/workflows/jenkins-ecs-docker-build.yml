@@ -31,7 +31,7 @@ jobs:
         working-directory: ./terraform/jenkins-ecs
 
     outputs:
-      build_name: ${{ steps.generate_img_build_name.outputs.build_name }}
+      output1: ${{ steps.generate_img_build_name.outputs.build_name }}
       output2: ${{ steps.output_test.outputs.my_value }}
 
     steps:
@@ -110,7 +110,7 @@ jobs:
 
       - name: Test output 
         run: | 
-          echo ${{ needs.docker-build.outputs.build_name }}
+          echo ${{ needs.docker-build.outputs.output1 }}
           echo ${{ needs.docker-build.outputs.output2 }}
 
 
