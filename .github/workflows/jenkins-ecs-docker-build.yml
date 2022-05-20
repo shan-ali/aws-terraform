@@ -31,7 +31,7 @@ jobs:
         working-directory: ./terraform/jenkins-ecs
 
     outputs:
-      output1: ${{ steps.generate_img_build_name.outputs.build_name }}
+      image_tag: ${{ steps.generate_img_tag.outputs.image_tag }}
       output2: ${{ steps.output_test.outputs.my_value }}
 
     steps:
@@ -40,13 +40,13 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Generate Image Build Name
-        id: generate_img_build_name
+        id: generate_img_tag
         run: |
           GITHUB_SHA_SHORT=`(echo ${GITHUB_SHA} | cut -c1-6)` >> $GITHUB_ENV
           DATE=`(date +"%Y.%m.%d")` >> $GITHUB_ENV
-          DOCKER_IMAGE_BUILD_NAME=${IMAGE_NAME}:${DATE}.${GITHUB_SHA_SHORT}
-          echo DOCKER_IMAGE_BUILD_NAME=${DOCKER_IMAGE_BUILD_NAME} >> $GITHUB_ENV
-          echo "::set-output name=build_name::$IMAGE_NAME"
+          DOCKER_IMAGE_TAG=${DATE}.${GITHUB_SHA_SHORT}
+          echo DOCKER_IMAGE_TAG=${DOCKER_IMAGE_BUILD_NAME} >> $GITHUB_ENV
+          echo "::set-output name=image_tag::$DOCKER_IMAGE_TAG"
         
       - name: set test output
         id: output_test
@@ -55,7 +55,7 @@ jobs:
 
       - name: output outputs
         run: |
-          echo "${{ steps.generate_img_build_name.outputs.build_name }}"
+          echo "${{ steps.generate_img_tag.outputs.image_tag }}"
           echo "${{ steps.output_test.outputs.my_value }}"
 
       - name: Test Image Build Name
@@ -110,7 +110,7 @@ jobs:
 
       - name: Test output 
         run: | 
-          echo ${{ needs.docker-build.outputs.output1 }}
+          echo ${{ needs.docker-build.outputs.image_tag }}
           echo ${{ needs.docker-build.outputs.output2 }}
 
 
