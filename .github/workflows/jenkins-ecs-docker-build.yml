@@ -1,7 +1,7 @@
 name: jenkins-ecs-docker-build
 
 env:
-  IMAGE_NAME: aws-terraform-jenkins
+  IMAGE_NAME: shanali38/aws-terraform-jenkins
 
 on:
   # Triggers the workflow on push or pull request events but only for the main branch
@@ -42,7 +42,7 @@ jobs:
         run: echo DATE=`(date +"%Y.%m.%d")` >> $GITHUB_ENV
 
       - name: Set Full Build Name
-        run: echo DOCKER_IMAGE_BUILD_NAME=${DOCKERHUB_USERNAME}/${IMAGE_NAME}:${DATE}.${GITHUB_SHA_SHORT} >> $GITHUB_ENV
+        run: echo DOCKER_IMAGE_BUILD_NAME=${IMAGE_NAME}:${DATE}.${GITHUB_SHA_SHORT} >> $GITHUB_ENV
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
@@ -61,7 +61,7 @@ jobs:
         with:
           file: ./docker/Dockerfile
           push: true
-          tags: ${{ env.DOCKER_IMAGE_BUILD_NAME }},${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:latest
+          tags: ${{ env.DOCKER_IMAGE_BUILD_NAME }},${{ env.IMAGE_NAME }}:latest
 
   # terraform-apply:
   #   needs: docker-build
