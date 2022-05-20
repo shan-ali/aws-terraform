@@ -64,7 +64,10 @@ jobs:
           tags: ${{ env.DOCKER_IMAGE_BUILD_NAME }},${{ env.IMAGE_NAME }}:latest
 
   terraform-apply:
+
     needs: docker-build
+
+    runs-on: ubuntu-latest
 
     defaults:
       run:
