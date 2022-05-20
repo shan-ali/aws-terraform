@@ -6,6 +6,12 @@ terraform {
   }
 }
 
+variable "docker_image" {
+  type        = string
+  description = "The docker image to deploy."
+  default = "shanali38/aws-terraform-jenkins:latest"
+}
+
 provider "aws" {
   region = "us-east-1"
 }
@@ -36,7 +42,7 @@ resource "aws_ecs_task_definition" "jenkins_ecs_td" {
   [
     {
         "name": "jenkins",
-        "image": "docker.io/jenkins/jenkins:lts-alpine-jdk11",
+        "image": "${var.docker_image}",
         "cpu": 0,
         "links": [],
         "portMappings": [
