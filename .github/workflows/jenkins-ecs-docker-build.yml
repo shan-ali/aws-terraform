@@ -38,7 +38,7 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v3
 
-      - name: Generate Image Build Name
+      - name: Generate Image Tag
         id: generate_img_tag
         run: |
           GITHUB_SHA_SHORT=`(echo ${GITHUB_SHA} | cut -c1-6)` >> $GITHUB_ENV
@@ -77,7 +77,7 @@ jobs:
         with:
           file: ./docker/Dockerfile
           push: true
-          tags: ${{ env.DOCKER_IMAGE_BUILD_NAME }},${{ env.IMAGE_NAME }}:latest
+          tags: ${{ env.IMAGE_NAME }}:${{ env.DOCKER_IMAGE_TAG }},${{ env.IMAGE_NAME }}:latest
 
 
 
@@ -124,6 +124,6 @@ jobs:
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        run: terraform apply -var="docker_image=${{ needs.docker-build.outputs.image_tag }}" -auto-approve
+        run: terraform apply -var="docker_image=${{ env.IMAGE_NAME }}:${{ needs.docker-build.outputs.image_tag }}" -auto-approve
 
         
