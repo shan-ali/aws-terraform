@@ -1,4 +1,4 @@
-name: jenkins-ecs-docker-build
+name: jenkins-ecs-docker-build-deploy
 
 env:
   IMAGE_NAME: shanali38/aws-terraform-jenkins
@@ -50,16 +50,6 @@ jobs:
       - name: Print Image Tag
         run: echo ${DOCKER_IMAGE_TAG}
 
-      # - name: Shorten Git SHA for Tagging
-      #   run: |
-      #   echo GITHUB_SHA_SHORT=`(echo ${GITHUB_SHA} | cut -c1-6)` >> $GITHUB_ENV
-
-      # - name: Get Date
-      #   run: echo DATE=`(date +"%Y.%m.%d")` >> $GITHUB_ENV
-
-      # - name: Set Full Build Name
-      #   run: echo DOCKER_IMAGE_BUILD_NAME=${IMAGE_NAME}:${DATE}.${GITHUB_SHA_SHORT} >> $GITHUB_ENV
-
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
 
@@ -79,10 +69,7 @@ jobs:
           push: true
           tags: ${{ env.IMAGE_NAME }}:${{ env.DOCKER_IMAGE_TAG }},${{ env.IMAGE_NAME }}:latest
 
-
-
   terraform-apply:
-
     needs: docker-build
 
     runs-on: ubuntu-latest
@@ -97,7 +84,7 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v3
 
-      - name: Print Image Tag From Output 
+      - name: Print Image Tag From Output
         run: echo ${{ needs.docker-build.outputs.image_tag }}
 
       # Install the preferred version of Terraform CLI
@@ -125,5 +112,3 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         run: terraform apply -var="docker_image=${{ env.IMAGE_NAME }}:${{ needs.docker-build.outputs.image_tag }}" -auto-approve
-
-        
