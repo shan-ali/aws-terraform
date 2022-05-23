@@ -2,6 +2,8 @@ name: jenkins-ecs-docker-build-deploy
 
 env:
   IMAGE_NAME: shanali38/aws-terraform-jenkins
+  ECS_CLUSTER: jenkins_ecs_cluster
+  ECS_SERVICE: jenkins_ecs_service
 
 on:
   # Triggers the workflow on push or pull request events but only for the main branch
@@ -94,5 +96,8 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-2
 
-      - name: Check AWS CLI Version
+      - name: Print AWS CLI Version
         run: aws --version
+
+      - name: Deploy New Image
+        run: aws ecs update-service --cluster ${{ env.ECS_CLUSTER }} --service ${{ env.ECS_SERVICE }} --force-new-deployment
