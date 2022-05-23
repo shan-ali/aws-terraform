@@ -1,4 +1,4 @@
-name: jenkins-ecs-docker-build-deploy
+name: jenkins-ecs-docker-build-deploy-old
 
 env:
   IMAGE_NAME: shanali38/aws-terraform-jenkins
