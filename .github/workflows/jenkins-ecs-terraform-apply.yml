@@ -56,6 +56,9 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         run: terraform init
 
+      - name: Echo Input
+        run: echo ${{ github.event.inputs.dockerImageTag.default }}
+
       # On push to main, build or change infrastructure according to Terraform configuration files
       - name: Terraform Apply
         #if: github.ref == 'refs/heads/main' && github.event_name == 'push'

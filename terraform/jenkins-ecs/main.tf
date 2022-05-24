@@ -29,6 +29,7 @@ resource "aws_ecs_cluster_capacity_providers" "jenkins_ecs_cluster_capacity_prov
   capacity_providers = ["FARGATE"]
 }
 
+
 resource "aws_ecs_task_definition" "jenkins_ecs_td" {
   family                   = "jenkins_ecs_td"
   requires_compatibilities = ["FARGATE"]
