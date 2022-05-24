@@ -1,5 +1,8 @@
 name: jenkins-ecs-terraform-apply
 
+env:
+  DEFAULT_IMAGE: ${{ github.event.inputs.docker_image_tag.default }}
+
 on:
   # Triggers the workflow on push or pull request events but only for the main branch
   push:
@@ -18,7 +21,7 @@ on:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
     inputs:
-      dockerImageTag:
+      docker_image_tag:
         description: "Jenkins Image to Deploy to ECS"
         required: true
         default: "shanali38/aws-terraform-jenkins:latest"
@@ -32,6 +35,9 @@ jobs:
       run:
         shell: bash
         working-directory: ./terraform/jenkins-ecs
+
+    outputs:
+      inputpresent: ${{ steps.check_docker_image_tag.outputs.inputpresent }}
 
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
@@ -56,13 +62,27 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         run: terraform init
 
-      - name: Echo Input
-        run: echo ${{ github.event.inputs.dockerImageTag.default }}
+      - name: Check if docker_image_tag Input is Empty
+        id: check_docker_image_tag
+        run: |
+          if [ "$DEFAULT_IMAGE" == "" ]; then
+            echo ::set-output name=inputpresent::false
+          else
+            echo ::set-output name=inputpresent::true
+          fi
 
       # On push to main, build or change infrastructure according to Terraform configuration files
       - name: Terraform Apply
-        #if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        if: ${{ steps.check_docker_image_tag.outputs.inputpresent }}
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        run: terraform apply -var="docker_image=${{ github.event.inputs.dockerImageTag.default }}" -auto-approve
+        run: terraform apply -var="docker_image=${{ github.event.inputs.docker_image_tag.default }}" -auto-approve
+
+        # On push to main, build or change infrastructure according to Terraform configuration files
+      - name: Terraform Apply
+        if: ${{ steps.check_docker_image_tag.outputs.inputpresent }} != 'false'
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        run: terraform apply -auto-approve
