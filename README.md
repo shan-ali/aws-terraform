@@ -7,10 +7,10 @@ Deploy Jenkins on an AWS ECS cluster using Terraform and Github Actions
 ## Technologies
 
 - [AWS ECS](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/Welcome.html)
-- [Terraform](https://www.terraform.io/docs)
-- [Docker](https://docs.docker.com/)
-- [GitHub Actions](https://docs.github.com/en/actions)
 - [Jenkins](https://www.jenkins.io/doc/)
+- [Docker](https://docs.docker.com/)
+- [Terraform](https://www.terraform.io/docs)
+- [GitHub Actions](https://docs.github.com/en/actions)
 
 ## AWS ECS (Elastic Container Service) Basics
 
@@ -29,3 +29,38 @@ To simplify this further, we will be creating a task definiton that contains our
 We will be building a custom Jenkins Docker image named `shanali38/aws-terraform-jenkins` that contains pre installed plugins and one "helloworld" job definition. This is all represented in the [Dockerfile](docker/Dockerfile) in the `docker/` directory. 
 
 The build image will be pushed to a Docker Hub Repository: https://hub.docker.com/repository/docker/shanali38/aws-terraform-jenkins
+
+## Terraform
+
+We will use Terraform to create, update, and delete our AWS infrastructure
+
+### Terraform State
+
+"Terraform must store state about your managed infrastructure and configuration. This state is used by Terraform to map real world resources to your configuration, keep track of metadata, and to improve performance for large infrastructures."
+
+"This state is stored by default in a local file named `terraform.tfstate`, but it can also be stored remotely, which works better in a team environment."
+
+To follow the best practices, we will be using AWS S3 to store our terraform state remotely. The Terraform file [terraform/terraform-backend-s3/main.tf](terraform/terraform-backend-s3/main.tf) contains the resource definitons to create the S3 bucket named `shan-ali-terraform-state` with server side encryption. 
+
+We can run Terraform locally to create this S3 bucket. 
+
+```
+cd terraform/terraform-backend-s3
+terraform apply 
+```
+
+In the Terraform file for creating our AWS Resources for our Jenkins ECS cluster [terraform/jenkins-ecs/main.tf](terraform/jenkins-ecs/main.tf) we specify the S3 backend to use along with the `terraform.tfstate` to store
+
+```
+terraform {
+  backend "s3" {
+    bucket = "shan-ali-terraform-state"
+    key    = "ecs/jenkins-ecs/terraform.tfstate"
+    region = "us-east-1"
+  }
+}
+```
+
+### Terraform 
+
+
