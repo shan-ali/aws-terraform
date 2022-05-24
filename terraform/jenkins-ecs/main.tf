@@ -9,7 +9,7 @@ terraform {
 variable "docker_image" {
   type        = string
   description = "The docker image to deploy."
-  default = "shanali38/aws-terraform-jenkins:latest"
+  default     = "shanali38/aws-terraform-jenkins:latest"
 }
 
 provider "aws" {
@@ -72,11 +72,13 @@ resource "aws_ecs_task_definition" "jenkins_ecs_td" {
 }
 
 resource "aws_ecs_service" "jenkins_ecs_service" {
-  name            = "jenkins_ecs_service"
-  cluster         = aws_ecs_cluster.jenkins_ecs_cluster.id
-  task_definition = aws_ecs_task_definition.jenkins_ecs_td.arn
-  launch_type     = "FARGATE"
-  desired_count   = 1
+  name                               = "jenkins_ecs_service"
+  cluster                            = aws_ecs_cluster.jenkins_ecs_cluster.id
+  task_definition                    = aws_ecs_task_definition.jenkins_ecs_td.arn
+  launch_type                        = "FARGATE"
+  desired_count                      = 1
+  deployment_minimum_healthy_percent = 100
+  deployment_maximum_percent         = 200
   #iam_role        = aws_iam_role.foo.arn
   #depends_on      = [aws_iam_role_policy.foo]
   platform_version        = "LATEST"
