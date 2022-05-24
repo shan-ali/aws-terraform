@@ -10,8 +10,6 @@ on:
       - "main"
     paths:
       - "docker/*"
-      - "jenkins/*"
-      - "Jenkinsfile"
   pull_request:
     types:
       - closed
@@ -19,8 +17,6 @@ on:
       - "main"
     paths:
       - "docker/*"
-      - "jenkins/*"
-      - "Jenkinsfile"
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
@@ -73,7 +69,7 @@ jobs:
           tags: ${{ env.IMAGE_NAME }}:${{ env.DOCKER_IMAGE_TAG }},${{ env.IMAGE_NAME }}:latest
 
   terraform-apply:
-    needs: docker-build
+    needs: docker-build-push
 
     runs-on: ubuntu-latest
 
@@ -88,7 +84,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Print Image Tag From Output
-        run: echo ${{ needs.docker-build.outputs.image_tag }}
+        run: echo ${{ needs.docker-build-push.outputs.image_tag }}
 
       # Install the preferred version of Terraform CLI
       - name: Setup Terraform
@@ -114,4 +110,4 @@ jobs:
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        run: terraform apply -var="docker_image=${{ env.IMAGE_NAME }}:${{ needs.docker-build.outputs.image_tag }}" -auto-approve
+        run: terraform apply -var="docker_image=${{ env.IMAGE_NAME }}:${{ needs.docker-build-push.outputs.image_tag }}" -auto-approve
