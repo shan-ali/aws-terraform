@@ -35,8 +35,8 @@ resource "aws_ecs_task_definition" "jenkins_ecs_td" {
   network_mode             = "awsvpc"
   cpu                      = 1024
   memory                   = 2048
-  task_role_arn            = "arn:aws:iam::345431723159:role/ecsTaskExecutionRole"
-  execution_role_arn       = "arn:aws:iam::345431723159:role/ecsTaskExecutionRole"
+  execution_role_arn       = aws_iam_role.ecsTaskExecutionRole.arn
+  task_role_arn            = aws_iam_role.ecsTaskExecutionRole.arn
 
   container_definitions = <<DEFINITION
   [
@@ -79,16 +79,38 @@ resource "aws_ecs_service" "jenkins_ecs_service" {
   desired_count                      = 1
   deployment_minimum_healthy_percent = 100
   deployment_maximum_percent         = 200
-  #iam_role        = aws_iam_role.foo.arn
-  #depends_on      = [aws_iam_role_policy.foo]
-  platform_version        = "LATEST"
-  enable_ecs_managed_tags = true
+  platform_version                   = "LATEST"
+  enable_ecs_managed_tags            = true
 
   network_configuration {
     subnets          = ["subnet-088406bf154155db2"]
     security_groups  = [aws_security_group.jenkins_ecs_sg.id]
     assign_public_ip = true
   }
+}
+
+resource "aws_iam_role" "ecsTaskExecutionRole" {
+  name               = "jenkins_ecs_execution_task_role"
+  assume_role_policy = data.aws_iam_policy_document.assume_role_policy.json
+  tags = {
+    Name = "jenkins_ecs_iam_role"
+  }
+}
+
+data "aws_iam_policy_document" "assume_role_policy" {
+  statement {
+    actions = ["sts:AssumeRole"]
+
+    principals {
+      type        = "Service"
+      identifiers = ["ecs.amazonaws.com"]
+    }
+  }
+}
+
+resource "aws_iam_role_policy_attachment" "ecsTaskExecutionRole_policy" {
+  role       = aws_iam_role.ecsTaskExecutionRole.name
+  policy_arn = "arn:aws:iam::aws:policy/aws-service-role/AmazonECSServiceRolePolicy"
 }
 
 resource "aws_security_group" "jenkins_ecs_sg" {
