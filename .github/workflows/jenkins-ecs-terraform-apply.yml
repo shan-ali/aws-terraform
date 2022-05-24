@@ -17,9 +17,15 @@ on:
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
+    inputs:
+      docker_image_tag:
+        description: "Jenkins Image to Deploy to ECS"
+        required: true
+        default: "shanali38/aws-terraform-jenkins:latest"
+        type: string
 
 jobs:
-  terraform:
+  terraform-apply:
     runs-on: ubuntu-latest
 
     defaults:
@@ -56,4 +62,4 @@ jobs:
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        run: terraform apply -auto-approve
+        run: terraform apply -var="docker_image=${{ github.event.inputs.docker_image_tag }} " -auto-approve

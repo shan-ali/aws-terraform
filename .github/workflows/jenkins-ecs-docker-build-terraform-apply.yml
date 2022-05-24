@@ -1,4 +1,4 @@
-name: jenkins-ecs-docker-build-deploy-old
+name: jenkins-ecs-docker-build-terraform-apply
 
 env:
   IMAGE_NAME: shanali38/aws-terraform-jenkins
@@ -22,7 +22,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  docker-build:
+  docker-build-push:
     runs-on: ubuntu-latest
 
     defaults:
