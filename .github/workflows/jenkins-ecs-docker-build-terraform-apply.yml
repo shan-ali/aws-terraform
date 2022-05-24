@@ -10,6 +10,8 @@ on:
       - "main"
     paths:
       - "docker/*"
+      - "jenkins/*"
+      - "Jenkinsfile"
   pull_request:
     types:
       - closed
@@ -17,7 +19,8 @@ on:
       - "main"
     paths:
       - "docker/*"
-
+      - "jenkins/*"
+      - "Jenkinsfile"
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 

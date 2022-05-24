@@ -6,5 +6,3 @@ RUN /usr/local/bin/install-plugins.sh < /usr/share/jenkins/ref/plugins.txt
 
 # copy initial build job as an example
 COPY --chown=jenkins:jenkins jenkins/jobs/ /var/jenkins_home/jobs/
-
-
