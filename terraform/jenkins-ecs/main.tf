@@ -114,7 +114,6 @@ resource "aws_iam_role_policy_attachment" "ecsTaskExecutionRole_policy" {
 
 }
 
-
 resource "aws_security_group" "jenkins_ecs_sg" {
   name = "jenkins_ecs_sg"
   ingress {
