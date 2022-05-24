@@ -61,6 +61,25 @@ terraform {
 }
 ```
 
-### Terraform 
+Resources:
+- https://www.terraform.io/language/settings/backends/s3
+- https://www.youtube.com/watch?v=FTgvgKT09qM&t=511s&ab_channel=SanjeevThiyagarajan
+
+### Terraform AWS Resources
+
+In the Terraform file for creating our AWS Resources for our Jenkins ECS cluster [terraform/jenkins-ecs/main.tf](terraform/jenkins-ecs/main.tf) we specify the configurations for all the AWS Resources that we need Terraform to create and manage. 
+
+- `jenkins_ecs_cluster`: The AWS ECS Cluster
+- `jenkins_ecs_td`: The AWS ECS Task Definition and Container Definition with our Jenkins Image
+- `jenkins_ecs_service`: The AWS ECS Service with desired count = 1 and network configurations (subnet, security groups)
+- `jenkins_ecs_sg`: The AWS Security group to use for the ECS Service with allows inbound traffic to port 8080 and outbound traffic from port 443 (for dockerhub container image pulling)
+- `jenkins_ecs_cw_lg`: The AWS Cloudwatch Logging Group to capture the logs from the Fargate Jenkins container 
+ 
+Resources: 
+- https://dev.to/thnery/create-an-aws-ecs-cluster-using-terraform-g80
+- https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ecs_cluster
+- https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ecs_task_definition
+- https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ecs_service
+
 
 
