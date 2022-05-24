@@ -76,7 +76,7 @@ jobs:
 
       # On push to main, build or change infrastructure according to Terraform configuration files
       - name: Terraform Apply
-        if: ${{ steps.check_docker_image_tag.outputs.inputpresent }} == 'true'
+        if: ${{ steps.check_docker_image_tag.outputs.inputpresent }} != 'false'
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -84,7 +84,7 @@ jobs:
 
         # On push to main, build or change infrastructure according to Terraform configuration files
       - name: Terraform Apply
-        if: ${{ steps.check_docker_image_tag.outputs.inputpresent }} != 'false'
+        if: ${{ steps.check_docker_image_tag.outputs.inputpresent }} == 'false'
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
