@@ -12,6 +12,7 @@ jobs:
         uses: Mattraks/delete-workflow-runs@v2
         with:
           token: ${{ secrets.ACTIONS_TOKEN }}
-          repository: ${{ env.GITHUB_REPOSITORY_OWNER }}/${{ env.GITHUB_REPOSITORY }}
+          # repository: ${{ env.GITHUB_REPOSITORY_OWNER }}/${{ env.GITHUB_REPOSITORY }}
+          repository: ${{ github.repository.owner }}/${{ github.repository }}
           retain_days: 0
           keep_minimum_runs: 2
