@@ -5,31 +5,13 @@ on:
   workflow_dispatch:
 
 jobs:
-  delete-all-runs:
+  del_runs:
     runs-on: ubuntu-latest
-
     steps:
-      - name: GitHub API
-        uses: actions/github-script@v6
-
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - name: Delete All Runs
-        run: |
-          echo ${{ secrets.ACTIONS_TOKEN }} | gh auth login --with-token
-
-          org=$GITHUB_REPOSITORY_OWNER
-          repo=$GITHUB_REPOSITORY
-
-          # Get workflow IDs with status "disabled_manually"
-          workflow_ids=($(gh api repos/$org/$repo/actions/workflows | jq '.workflows[] | select(.["state"] | contains("disabled_manually")) | .id'))
-
-          for workflow_id in "${workflow_ids[@]}"
-          do
-            echo "Listing runs for the workflow ID $workflow_id"
-            run_ids=( $(gh api repos/$org/$repo/actions/workflows/$workflow_id/runs --paginate | jq '.workflow_runs[].id') )
-            for run_id in "${run_ids[@]}"
-            do
-              echo "Deleting Run ID $run_id"
-              gh api repos/$org/$repo/actions/runs/$run_id -X DELETE >/dev/null
-            done
-          done
+      - name: Delete workflow runs
+        uses: Mattraks/delete-workflow-runs@v2
+        with:
+          token: ${{ secrets.ACTIONS_TOKEN }}
+          repository: ${{ env.GITHUB_REPOSITORY }}
+          retain_days: 0
+          keep_minimum_runs: 2
