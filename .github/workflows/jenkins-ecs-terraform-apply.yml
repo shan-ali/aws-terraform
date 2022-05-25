@@ -1,4 +1,4 @@
-name: jenkins-ecs-terraform-apply-remove
+name: jenkins-ecs-terraform-apply
 
 on:
   push:
