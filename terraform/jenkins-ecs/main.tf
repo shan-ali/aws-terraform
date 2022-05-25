@@ -103,7 +103,7 @@ data "aws_iam_policy_document" "jenkins_ecs_iam_policy_document" {
 
     principals {
       type        = "Service"
-      identifiers = ["ecs.amazonaws.com"]
+      identifiers = ["ecs-tasks.amazonaws.com"]
     }
   }
 }
