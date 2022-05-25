@@ -1,10 +1,6 @@
 name: jenkins-ecs-terraform-apply
 
-env:
-  DEFAULT_IMAGE: ${{ github.event.inputs.docker_image_tag.default }}
-
 on:
-  # Triggers the workflow on push or pull request events but only for the main branch
   push:
     branches:
       - "main"
@@ -36,9 +32,6 @@ jobs:
         shell: bash
         working-directory: ./terraform/jenkins-ecs
 
-    outputs:
-      inputpresent: ${{ steps.check_docker_image_tag.outputs.inputpresent }}
-
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - name: Checkout Repository
@@ -49,10 +42,11 @@ jobs:
         uses: hashicorp/setup-terraform@v1
         with:
           terraform_version: 1.2.0
-
-      # Runs a set of commands using the runners shell
-      - name: Check Terraform Install
         run: terraform -version
+
+      # # Runs a set of commands using the runners shell
+      # - name: Check Terraform Install
+      #   run: terraform -version
 
       # Initialize a new or existing Terraform working directory by creating initial files, loading any remote state, downloading modules, etc.
       - name: Terraform Init
@@ -62,14 +56,9 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         run: terraform init
 
-      - name: echo outputs
-        run: |
-          echo ${{ github.event.inputs.docker_image_tag }}
-          echo $INPUT_DOCKER_IMAGE_TAG
-          echo $INPUT_docker_image_tag
-
       # On push to main, build or change infrastructure according to Terraform configuration files
-      - name: Terraform Apply With Input
+      # If user ran workflow manually and gave an input for the docker image + tag then run
+      - name: Terraform Apply (With Input)
         if: github.event.inputs.docker_image_tag
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
