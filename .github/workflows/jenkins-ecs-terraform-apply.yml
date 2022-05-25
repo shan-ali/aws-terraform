@@ -72,7 +72,7 @@ jobs:
           fi
 
       - name: echo outputs
-        run: echo ${{ steps.check_docker_image_tag.outputs.inputpresent }}
+        run: echo ${{ github.event.inputs.docker_image_tag.default }}
 
       # On push to main, build or change infrastructure according to Terraform configuration files
       - name: Terraform Apply With Input
