@@ -1,4 +1,4 @@
-name: jenkins-ecs-docker-build-terraform-apply-remove
+name: jenkins-ecs-docker-build-terraform-apply
 
 env:
   IMAGE_NAME: shanali38/aws-terraform-jenkins

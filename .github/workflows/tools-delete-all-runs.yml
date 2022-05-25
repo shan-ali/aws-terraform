@@ -9,6 +9,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: GitHub API
+        uses: actions/github-script@v6
+
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - name: Delete All Runs
         run: |
