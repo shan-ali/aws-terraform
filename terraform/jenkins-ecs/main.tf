@@ -35,8 +35,8 @@ resource "aws_ecs_task_definition" "jenkins_ecs_td" {
   network_mode             = "awsvpc"
   cpu                      = 1024
   memory                   = 2048
-  execution_role_arn       = aws_iam_role.ecsTaskExecutionRole.arn
-  task_role_arn            = aws_iam_role.ecsTaskExecutionRole.arn
+  execution_role_arn       = aws_iam_role.jenkins_ecs_iam_role.arn
+  task_role_arn            = aws_iam_role.jenkins_ecs_iam_role.arn
 
   container_definitions = <<DEFINITION
   [
