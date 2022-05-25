@@ -62,17 +62,11 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         run: terraform init
 
-      - name: Check if docker_image_tag Input is Empty
-        id: check_docker_image_tag
-        run: |
-          if [ "$DEFAULT_IMAGE" == "" ]; then
-            echo ::set-output name=inputpresent::false
-          else
-            echo ::set-output name=inputpresent::true
-          fi
-
       - name: echo outputs
-        run: echo ${{ github.event.inputs.docker_image_tag.default }}
+        run: |
+          echo ${{ github.event.inputs.docker_image_tag.default }}
+          echo $INPUT_DOCKER_IMAGE_TAG
+          echo $INPUT_docker_image_tag
 
       # On push to main, build or change infrastructure according to Terraform configuration files
       - name: Terraform Apply With Input
