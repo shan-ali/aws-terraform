@@ -89,15 +89,15 @@ resource "aws_ecs_service" "jenkins_ecs_service" {
   }
 }
 
-resource "aws_iam_role" "ecsTaskExecutionRole" {
+resource "aws_iam_role" "jenkins_ecs_iam_role" {
   name               = "jenkins_ecs_execution_task_role"
-  assume_role_policy = data.aws_iam_policy_document.assume_role_policy.json
+  assume_role_policy = data.aws_iam_policy_document.jenkins_ecs_iam_policy_document.json
   tags = {
     Name = "jenkins_ecs_iam_role"
   }
 }
 
-data "aws_iam_policy_document" "assume_role_policy" {
+data "aws_iam_policy_document" "jenkins_ecs_iam_policy_document" {
   statement {
     actions = ["sts:AssumeRole"]
 
@@ -108,10 +108,15 @@ data "aws_iam_policy_document" "assume_role_policy" {
   }
 }
 
-resource "aws_iam_role_policy_attachment" "ecsTaskExecutionRole_policy" {
-  role       = aws_iam_role.ecsTaskExecutionRole.name
+resource "aws_iam_role_policy_attachment" "jenkins_ecs_iam_role_policy_attachement" {
+  role       = aws_iam_role.jenkins_ecs_iam_role.name
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
 
+}
+
+resource "aws_iam_instance_profile" "jenkins_ecs_iam_instance_profile" {
+  name = "jenkins_ecs_iam_instance_profile"
+  role = aws_iam_role.jenkins_ecs_iam_role.name
 }
 
 resource "aws_security_group" "jenkins_ecs_sg" {
