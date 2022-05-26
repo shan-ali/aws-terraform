@@ -19,7 +19,7 @@ Deploy Jenkins on an AWS ECS cluster using Terraform and Github Actions
 The main [Amazon ECS components](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/welcome-features.html) are the following:
 
 1. `Cluster` - a logical grouping of tasks or services
-2.`Task/Task Definition` - describes one or more containers that form your application
+2. `Task/Task Definition` - describes one or more containers that form your application
 3. `Service` - use an Amazon ECS service to run and maintain your desired number of tasks simultaneously in an Amazon ECS cluster
 
 To simplify this further, we will be creating a task definiton that contains our Jenkins image, a service that sets how many instances of the task to run, a cluster to represent our services and tasks. 
