@@ -1,6 +1,6 @@
 # aws-terraform-jenkins
 
-Deploy Jenkins on an AWS ECS cluster using Terraform and Github Actions
+Deploy Jenkins on an AWS ECS Fargate cluster using Terraform and Github Actions
 
 ## Table of Contents
 
