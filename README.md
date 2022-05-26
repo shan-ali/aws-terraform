@@ -4,6 +4,10 @@ Deploy Jenkins on an AWS ECS Fargate cluster using Terraform and Github Actions
 
 ## Table of Contents
 
+## Requirements
+
+- [Terraform](https://www.terraform.io/downloads)
+
 ## Technologies
 
 - [AWS ECS](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/Welcome.html)
