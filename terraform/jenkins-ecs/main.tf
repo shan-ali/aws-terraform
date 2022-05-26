@@ -114,10 +114,10 @@ resource "aws_iam_role_policy_attachment" "jenkins_ecs_iam_role_policy_attacheme
 
 }
 
-resource "aws_iam_instance_profile" "jenkins_ecs_iam_instance_profile" {
-  name = "jenkins_ecs_iam_instance_profile"
-  role = aws_iam_role.jenkins_ecs_iam_role.name
-}
+# resource "aws_iam_instance_profile" "jenkins_ecs_iam_instance_profile" {
+#   name = "jenkins_ecs_iam_instance_profile"
+#   role = aws_iam_role.jenkins_ecs_iam_role.name
+# }
 
 resource "aws_security_group" "jenkins_ecs_sg" {
   name = "jenkins_ecs_sg"
