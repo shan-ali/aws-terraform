@@ -41,6 +41,8 @@ The main [Amazon ECS components](https://docs.aws.amazon.com/AmazonECS/latest/de
 
 To simplify this further, we will be creating a task definiton that contains our Jenkins image, a service that sets how many instances of the task to run, a cluster to represent our services and tasks. 
 
+*** For this project we are using the Default VPC in our AWS Account ***
+
 ## The Jenkins Image
 
 We will be building a custom Jenkins Docker image named `shanali38/aws-terraform-jenkins` that contains pre installed plugins and one "helloworld" job definition. This is all represented in the [docker/Dockerfile](docker/Dockerfile) in the `docker/` directory. 
