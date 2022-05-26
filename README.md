@@ -109,13 +109,45 @@ There are three primary GitHub Workflows used in this repository used to automat
 
 Runs terraform apply on [terraform/jenkins-ecs/main.tf](terraform/jenkins-ecs/main.tf) when changes are pushed to this file to create our ECS Cluster using `shanali38/aws-terraform-jenkins:latest`. Additionally, we can run this workflow manually specifiying our image e.g `shanali38/aws-terraform-jenkins:<tag>`.
 
+```
+      - name: Terraform Apply
+        if: github.event.inputs.docker_image_tag == 0
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        run: terraform apply -auto-approve
+```
+
 ### jenkins-ecs-terraform-destroy
 
 Runs terraform destroy to teardown our ECS Cluster and AWS Resources
 
+```
+      - name: Terraform Destroy
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        run: terraform destroy -auto-approve
+```
+
 ### jenkins-ecs-docker-build-terraform-apply
 
 Runs a docker build & push on [docker/Dockerfile](docker/Dockerfile) when changes are pushed to this file. Images are pushed to a [Docker Hub Repository](https://hub.docker.com/repository/docker/shanali38/aws-terraform-jenkins). Secondly, this workflow will run a terraform apply using [terraform/jenkins-ecs/main.tf](terraform/jenkins-ecs/main.tf) but with the newly created docker image tag. 
+
+```
+      - name: Login to DockerHub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and push
+        uses: docker/build-push-action@v3
+        with:
+          file: ./docker/Dockerfile
+          push: true
+          tags: ${{ env.IMAGE_NAME }}:${{ env.DOCKER_IMAGE_TAG }},${{ env.IMAGE_NAME }}:latest
+```
 
 ### Action Secrets
 
