@@ -100,6 +100,12 @@ Runs terraform destroy to teardown our ECS Cluster and AWS Resources
 
 Runs a docker build & push on [docker/Dockerfile](docker/Dockerfile) when changes are pushed to this file. Images are pushed to a [Docker Hub Repository](https://hub.docker.com/repository/docker/shanali38/aws-terraform-jenkins). Secondly, this workflow will run a terraform apply using [terraform/jenkins-ecs/main.tf](terraform/jenkins-ecs/main.tf) but with the newly created docker image tag. 
 
+### Action Secrets
+
+There are four GitHub Repository Secrets that are used in our workflows that must be set
+
+- `AWS_ACCESS_KEY_ID` & `AWS_SECRET_ACCESS_KEY`: Used to access the AWS Account
+- `DOCKERHUB_USERNAME` & `DOCKERHUB_TOKEN`: Used to push to the Docker Hub Repository 
 
 
 
