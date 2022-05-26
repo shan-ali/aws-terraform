@@ -4,6 +4,19 @@ Deploy Jenkins on an AWS ECS Fargate cluster using Terraform and Github Actions
 
 ## Table of Contents
 
+- [Requirements](#requirements)
+- [Technologies](#technologies)
+- [AWS ECS (Elastic Container Service) Basics](#aws-ecs-elastic-container-service-basics)
+- [The Jenkins Image](#the-jenkins-image)
+- [Terraform](#terraform)
+  - [Terraform State](#terraform-state)
+  - [Terraform AWS Resources](#terraform-aws-resources)
+- [GitHub Actions](#github-actions)
+  - [jenkins-ecs-terraform-apply](#jenkins-ecs-terraform-apply)
+  - [jenkins-ecs-terraform-destroy](#jenkins-ecs-terraform-destroy)
+  - [jenkins-ecs-docker-build-terraform-apply](#jenkins-ecs-docker-build-terraform-apply)
+  - [Action Secrets](#action-secrets)
+
 ## Requirements
 
 - [Terraform](https://www.terraform.io/downloads)
