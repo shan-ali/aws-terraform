@@ -26,7 +26,7 @@ To simplify this further, we will be creating a task definiton that contains our
 
 ## The Jenkins Image
 
-We will be building a custom Jenkins Docker image named `shanali38/aws-terraform-jenkins` that contains pre installed plugins and one "helloworld" job definition. This is all represented in the [Dockerfile](docker/Dockerfile) in the `docker/` directory. 
+We will be building a custom Jenkins Docker image named `shanali38/aws-terraform-jenkins` that contains pre installed plugins and one "helloworld" job definition. This is all represented in the [docker/Dockerfile](docker/Dockerfile) in the `docker/` directory. 
 
 The build image will be pushed to a Docker Hub Repository: https://hub.docker.com/repository/docker/shanali38/aws-terraform-jenkins
 
@@ -70,16 +70,36 @@ Resources:
 In the Terraform file for creating our AWS Resources for our Jenkins ECS cluster [terraform/jenkins-ecs/main.tf](terraform/jenkins-ecs/main.tf) we specify the configurations for all the AWS Resources that we need Terraform to create and manage. 
 
 - `jenkins_ecs_cluster`: The AWS ECS Cluster
-- `jenkins_ecs_td`: The AWS ECS Task Definition and Container Definition with our Jenkins Image
+- `jenkins_ecs_td`: The AWS ECS Task Definition, Container Definition with our Jenkins Image, and CPU & Memory usage
 - `jenkins_ecs_service`: The AWS ECS Service with desired count = 1 and network configurations (subnet, security groups)
 - `jenkins_ecs_sg`: The AWS Security group to use for the ECS Service with allows inbound traffic to port 8080 and outbound traffic from port 443 (for dockerhub container image pulling)
 - `jenkins_ecs_cw_lg`: The AWS Cloudwatch Logging Group to capture the logs from the Fargate Jenkins container 
+- `jenkins_ecs_iam_role`,`jenkins_ecs_iam_policy_document`: The AWS IAM Role and attached policy used by the Task Definition 
+
+To full automate out infrastructure provisioning we will use GitHub Actions to execute all of our Terraform apply commands. 
  
 Resources: 
 - https://dev.to/thnery/create-an-aws-ecs-cluster-using-terraform-g80
 - https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ecs_cluster
 - https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ecs_task_definition
 - https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ecs_service
+
+## GitHub Actions
+
+There are three primary GitHub Workflows used in this repository used to automate the infrastructure creation and application building. 
+
+### jenkins-ecs-terraform-apply
+
+Runs terraform apply on [terraform/jenkins-ecs/main.tf](terraform/jenkins-ecs/main.tf) when changes are pushed to this file to create our ECS Cluster using `shanali38/aws-terraform-jenkins:latest`. Additionally, we can run this workflow manually specifiying our image e.g `shanali38/aws-terraform-jenkins:<tag>`.
+
+### jenkins-ecs-terraform-destroy
+
+Runs terraform destroy to teardown our ECS Cluster and AWS Resources
+
+### jenkins-ecs-docker-build-terraform-apply
+
+Runs a docker build & push on [docker/Dockerfile](docker/Dockerfile) when changes are pushed to this file. Images are pushed to a [Docker Hub Repository](https://hub.docker.com/repository/docker/shanali38/aws-terraform-jenkins). Secondly, this workflow will run a terraform apply using [terraform/jenkins-ecs/main.tf](terraform/jenkins-ecs/main.tf) but with the newly created docker image tag. 
+
 
 
 
