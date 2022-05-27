@@ -105,9 +105,9 @@ Resources:
 
 ## GitHub Actions
 
-There are three primary GitHub Workflows used in this repository used to automate the infrastructure creation and application building. 
+There are three primary GitHub Workflows used in this repository used to automate the infrastructure creation and application building. Workflows are found in [.github/workflows](.github/workflows). 
 
-### jenkins-ecs-terraform-apply
+### [jenkins-ecs-terraform-apply](.github/workflows/jenkins-ecs-terraform-apply.yml)
 
 Runs terraform apply on [terraform/jenkins-ecs/main.tf](terraform/jenkins-ecs/main.tf) when changes are pushed to this file to create our ECS Cluster using `shanali38/aws-terraform-jenkins:latest`. Additionally, we can run this workflow manually specifiying our image e.g `shanali38/aws-terraform-jenkins:<tag>`.
 
@@ -120,7 +120,7 @@ Runs terraform apply on [terraform/jenkins-ecs/main.tf](terraform/jenkins-ecs/ma
         run: terraform apply -auto-approve
 ```
 
-### jenkins-ecs-terraform-destroy
+### [jenkins-ecs-terraform-destroy](.github/workflows/jenkins-ecs-terraform-destroy.yml)
 
 Runs terraform destroy to teardown our ECS Cluster and AWS Resources
 
@@ -132,7 +132,7 @@ Runs terraform destroy to teardown our ECS Cluster and AWS Resources
         run: terraform destroy -auto-approve
 ```
 
-### jenkins-ecs-docker-build-terraform-apply
+### [jenkins-ecs-docker-build-terraform-apply](.github/workflows/jenkins-ecs-docker-build-terraform-apply.yml)
 
 Runs a docker build & push on [docker/Dockerfile](docker/Dockerfile) when changes are pushed to this file. Images are pushed to a [Docker Hub Repository](https://hub.docker.com/repository/docker/shanali38/aws-terraform-jenkins). Secondly, this workflow will run a terraform apply using [terraform/jenkins-ecs/main.tf](terraform/jenkins-ecs/main.tf) but with the newly created docker image tag. 
 
