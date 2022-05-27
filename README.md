@@ -163,7 +163,8 @@ There are four GitHub Repository Secrets that are used in our workflows that mus
 https://user-images.githubusercontent.com/16169323/170725094-cafb3477-b95c-4f1e-8503-8a379b4d746f.mp4
 
 ## To DO
-1. add VPC, Subnet, IGW, Route Tables, ect. to terraform
+1. Add VPC, Subnet, IGW, Route Tables, ect. to terraform
+2. Add S3 creation for Jenkins Home + volume mount in the ECS Container Definition. 
 
 
 
